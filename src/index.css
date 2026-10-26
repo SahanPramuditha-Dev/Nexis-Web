@@ -1,0 +1,527 @@
+/* =============================================================
+   NEXIS Design System Tokens & Smooth Transition Animations
+   ============================================================= */
+
+@import "tailwindcss";
+
+@theme {
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-bg-canvas: var(--bg-canvas);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-focus: var(--border-focus);
+}
+
+:root {
+  /* Apple iOS 18 / macOS Sonoma Dark Mode Tokens (Deep Neutral Jet Black & Layered System Grays) */
+  --bg-canvas:        #000000;
+  --bg-surface:       #1C1C1E;
+  --bg-subtle:        #2C2C2E;
+  --bg-glass:         rgba(28, 28, 30, 0.75);
+  --surface:          #1C1C1E;
+  
+  --on-surface:       #FFFFFF;
+  --on-surface-muted: #8E8E93;
+  --on-surface-dim:   #636366;
+  
+  --primary:          #0A84FF;
+  --primary-hover:    #0071E3;
+  --on-primary:       #FFFFFF;
+  --on-primary-glow:  rgba(10, 132, 255, 0.25);
+  --primary-glow:     rgba(10, 132, 255, 0.25);
+
+  --border-subtle:    rgba(255, 255, 255, 0.08);
+  --border-strong:    rgba(255, 255, 255, 0.18);
+  --outline:          rgba(255, 255, 255, 0.12);
+  --border-active:    #0A84FF;
+  --border-focus:     #0A84FF;
+
+  --color-success:    #30D158;
+  --color-warning:    #FF9F0A;
+  --color-danger:     #FF453A;
+  --color-purple:     #BF5AF2;
+  --color-blue:       #0A84FF;
+  --color-cyan:       #64D2FF;
+}
+
+:root[data-theme="light"],
+html[data-theme="light"],
+html.light {
+  /* Apple iOS 18 Clean High-Contrast Light Mode */
+  --bg-canvas:        #F4F4F8;
+  --bg-surface:       #FFFFFF;
+  --bg-subtle:        #E2E8F0;
+  --bg-glass:         rgba(255, 255, 255, 0.92);
+  --surface:          #FFFFFF;
+
+  --on-surface:       #0F172A;
+  --on-surface-muted: #334155;
+  --on-surface-dim:   #64748B;
+
+  --primary:          #0066FF;
+  --primary-hover:    #0052CC;
+  --on-primary:       #FFFFFF;
+  --on-primary-glow:  rgba(0, 102, 255, 0.15);
+  --primary-glow:     rgba(0, 102, 255, 0.15);
+
+  --border-subtle:    rgba(0, 0, 0, 0.12);
+  --border-strong:    rgba(0, 0, 0, 0.25);
+  --outline:          rgba(0, 0, 0, 0.16);
+  --border-active:    #0066FF;
+  --border-focus:     #0066FF;
+
+  --color-success:    #16A34A;
+  --color-warning:    #D97706;
+  --color-danger:     #DC2626;
+  --color-purple:     #9333EA;
+  --color-blue:       #0284C7;
+  --color-cyan:       #0891B2;
+}
+
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.45); }
+}
+
+.speedtest-dot-pulse {
+  animation: dotPulse 1.1s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .speedtest-dot-pulse {
+    animation: none !important;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+/* ── Minimalist Smooth Hardware-Accelerated Scrollbar ────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 9999px;
+  transition: background 200ms ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-active);
+}
+
+/* ── Coordinated Global Transition (Smooth Cross-Fade Fallback) ──────────── */
+body, 
+.nexis-card, 
+header, 
+aside, 
+button, 
+nav {
+  transition: 
+    background-color 280ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 280ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 200ms ease,
+    box-shadow 280ms ease;
+}
+
+/* Instant capture for View Transitions API to guarantee crisp radial reveals */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: none !important;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: var(--bg-canvas);
+  color: var(--on-surface);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── View Transitions API: Only disable for Theme Radial Wipe ─────────── */
+html.theme-transitioning::view-transition-old(root),
+html.theme-transitioning::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+html.theme-transitioning::view-transition-old(root) {
+  z-index: 1;
+}
+
+html.theme-transitioning::view-transition-new(root) {
+  z-index: 9999;
+}
+
+/* ── Apple-Grade Hardware-Accelerated Scoped Route View Transitions ───── */
+aside.nexis-sidebar-shell {
+  view-transition-name: nexis-sidebar;
+}
+
+header.nexis-header-shell {
+  view-transition-name: nexis-header;
+}
+
+nav.nexis-mobile-nav-shell {
+  view-transition-name: nexis-mobile-nav;
+}
+
+main.nexis-main-shell {
+  view-transition-name: nexis-main-viewport;
+}
+
+::view-transition-group(nexis-sidebar),
+::view-transition-group(nexis-header),
+::view-transition-group(nexis-mobile-nav) {
+  animation: none !important;
+}
+
+::view-transition-group(nexis-main-viewport) {
+  animation-duration: 200ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: visible;
+}
+
+::view-transition-old(nexis-main-viewport) {
+  animation: 110ms cubic-bezier(0.4, 0, 1, 1) both nexisPageFadeOut;
+}
+
+::view-transition-new(nexis-main-viewport) {
+  animation: 200ms cubic-bezier(0.16, 1, 0.3, 1) both nexisPageFadeIn;
+}
+
+@keyframes nexisPageFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes nexisPageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Apple Squircle & Translucent Frosted Glass Card Architecture ─────────── */
+.nexis-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 22px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(24px) saturate(180%);
+  transition: border-color 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1), transform 150ms ease;
+  position: relative;
+}
+
+:root[data-theme="dark"] .nexis-card {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="light"] .nexis-card {
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+}
+
+.nexis-card:hover {
+  border-color: color-mix(in srgb, var(--primary) 40%, var(--border-subtle));
+}
+
+.nexis-pill-interactive {
+  transition: all 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.nexis-pill-interactive:active {
+  transform: scale(0.96);
+}
+
+.nexis-glow {
+  box-shadow: 0 0 30px var(--primary-glow);
+}
+
+/* ── Apple Breadcrumb Fade ────────────────────────────────────────── */
+@keyframes appleBreadcrumbFade {
+  0% {
+    opacity: 0.4;
+    transform: translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+.nexis-breadcrumb-fade {
+  animation: appleBreadcrumbFade 150ms ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexis-breadcrumb-fade,
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* ── Speedometer Cockpit Radar & Liquid Shimmer Animations ─────── */
+@keyframes dialRadarSweep {
+  0% { transform: rotate(145deg); opacity: 0.1; }
+  50% { opacity: 0.85; }
+  100% { transform: rotate(395deg); opacity: 0.1; }
+}
+
+@keyframes sonarPulse {
+  0% { r: 16px; opacity: 0.85; stroke-width: 2.5px; }
+  100% { r: 72px; opacity: 0; stroke-width: 0.5px; }
+}
+
+@keyframes arcLiquidFlow {
+  0% { stroke-dashoffset: 120; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.animate-sonar-pulse {
+  animation: sonarPulse 1.6s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+}
+
+.animate-sonar-pulse-delayed {
+  animation: sonarPulse 1.6s cubic-bezier(0.2, 0.8, 0.4, 1) 0.6s infinite;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  background: var(--bg-canvas);
+  font-family: inherit;
+}
+
+/* ── Leaflet NEXIS Theme Overrides & Glassmorphism ──────────────── */
+.leaflet-popup-content-wrapper {
+  background: rgba(15, 23, 42, 0.96) !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 16px 40px -5px rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: inherit;
+}
+
+.leaflet-popup-tip {
+  background: rgba(15, 23, 42, 0.96) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  color: rgba(255, 255, 255, 0.5) !important;
+  padding: 8px 10px 0 0 !important;
+  font-size: 18px !important;
+  transition: color 150ms ease;
+}
+
+.leaflet-container a.leaflet-popup-close-button:hover {
+  color: #ffffff !important;
+}
+
+/* ── Leaflet Tooltip NEXIS Obsidian Glass Theme ──────────────── */
+.leaflet-tooltip {
+  background: rgba(15, 23, 42, 0.94) !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  padding: 4px 10px !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+}
+
+.leaflet-tooltip-top:before {
+  border-top-color: rgba(15, 23, 42, 0.94) !important;
+}
+
+.leaflet-tooltip-bottom:before {
+  border-bottom-color: rgba(15, 23, 42, 0.94) !important;
+}
+
+.leaflet-tooltip-left:before {
+  border-left-color: rgba(15, 23, 42, 0.94) !important;
+}
+
+.leaflet-tooltip-right:before {
+  border-right-color: rgba(15, 23, 42, 0.94) !important;
+}
+
+/* ── Leaflet Light Theme Overrides ──────────────────────────────── */
+:root[data-theme="light"] .leaflet-popup-content-wrapper,
+html[data-theme="light"] .leaflet-popup-content-wrapper,
+html.light .leaflet-popup-content-wrapper {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #0F172A !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 16px 40px -5px rgba(0, 0, 0, 0.15) !important;
+}
+
+:root[data-theme="light"] .leaflet-popup-tip,
+html[data-theme="light"] .leaflet-popup-tip,
+html.light .leaflet-popup-tip {
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme="light"] .leaflet-container a.leaflet-popup-close-button,
+html[data-theme="light"] .leaflet-container a.leaflet-popup-close-button,
+html.light .leaflet-container a.leaflet-popup-close-button {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+:root[data-theme="light"] .leaflet-container a.leaflet-popup-close-button:hover,
+html[data-theme="light"] .leaflet-container a.leaflet-popup-close-button:hover,
+html.light .leaflet-container a.leaflet-popup-close-button:hover {
+  color: #000000 !important;
+}
+
+:root[data-theme="light"] .leaflet-tooltip,
+html[data-theme="light"] .leaflet-tooltip,
+html.light .leaflet-tooltip {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #0F172A !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10) !important;
+}
+
+:root[data-theme="light"] .leaflet-tooltip-top:before,
+html[data-theme="light"] .leaflet-tooltip-top:before,
+html.light .leaflet-tooltip-top:before {
+  border-top-color: rgba(255, 255, 255, 0.96) !important;
+}
+
+:root[data-theme="light"] .leaflet-tooltip-bottom:before,
+html[data-theme="light"] .leaflet-tooltip-bottom:before,
+html.light .leaflet-tooltip-bottom:before {
+  border-bottom-color: rgba(255, 255, 255, 0.96) !important;
+}
+
+:root[data-theme="light"] .leaflet-tooltip-left:before,
+html[data-theme="light"] .leaflet-tooltip-left:before,
+html.light .leaflet-tooltip-left:before {
+  border-left-color: rgba(255, 255, 255, 0.96) !important;
+}
+
+:root[data-theme="light"] .leaflet-tooltip-right:before,
+html[data-theme="light"] .leaflet-tooltip-right:before,
+html.light .leaflet-tooltip-right:before {
+  border-right-color: rgba(255, 255, 255, 0.96) !important;
+}
+
+.leaflet-control-attribution {
+  background: color-mix(in srgb, var(--bg-surface) 80%, transparent) !important;
+  color: var(--on-surface-dim) !important;
+  font-size: 9.5px !important;
+  backdrop-filter: blur(8px);
+  border-radius: 8px !important;
+  margin: 6px !important;
+  padding: 2px 8px !important;
+  border: 1px solid var(--border-subtle) !important;
+}
+
+.leaflet-control-attribution a {
+  color: var(--primary) !important;
+  text-decoration: none;
+}
+.leaflet-control-attribution a:hover {
+  text-decoration: underline;
+}
+
+/* Hide default leaflet zoom buttons as we provide custom sleek glass controls */
+.leaflet-control-zoom {
+  display: none !important;
+}
+
+/* =============================================================
+   Apple Maps Style Live "My Location" Beacon Animations
+   ============================================================= */
+@keyframes applePulseRing {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.65;
+  }
+  70% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(2.0);
+    opacity: 0;
+  }
+}
+
+.nexis-user-beacon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  pointer-events: auto;
+}
+
+.nexis-user-pulse-inner {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(10, 132, 255, 0.45) 0%, rgba(10, 132, 255, 0.08) 75%, transparent 100%);
+  border: 1px solid rgba(10, 132, 255, 0.7);
+  animation: applePulseRing 2.6s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+  pointer-events: none;
+}
+
+.nexis-user-core-dot {
+  position: relative;
+  width: 13px;
+  height: 13px;
+  border-radius: 9999px;
+  background: #0A84FF;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 10px rgba(10, 132, 255, 0.8), 0 2px 6px rgba(0, 0, 0, 0.35);
+  z-index: 2;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nexis-user-beacon:hover .nexis-user-core-dot {
+  transform: scale(1.2);
+}
+
